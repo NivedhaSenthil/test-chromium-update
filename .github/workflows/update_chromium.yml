@@ -27,10 +27,12 @@ jobs:
           export REVISION=$(curl -s -S $LASTCHANGE_URL)
           echo "latest revision is $REVISION"
           npx json -I -f package.json -e "this.taiko.chromium_revision = $REVISION"
-      - name: Commit and push version update
-        uses: alexesprit/action-update-file@master
-        with:
-          branch: ${{format('{{{0}{1}{2}}}', 'update-chromium', github.run_id, github.run_number)}}
-          file-path: ../package.json
-          commit-msg: Updated Chromium version
-          github-token: ${{ secrets.TEST_GITHUB_TOKEN }}     
+          npm install
+          git config --global user.name "$(git --no-pager log --format=format:'%an' -n 1)"
+          git config --global user.email "$(git --no-pager log --format=format:'%ae' -n 1)"
+          git add .
+          git commit -m "updated chromium version $REVISION"
+          git push
+      # - name: Create PR
+          
+
