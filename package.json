@@ -17,7 +17,7 @@
   },
   "homepage": "https://github.com/NivedhaSenthil/test-chromium-update#readme",
   "taiko": {
-    "chromium_revision": "724157",
+    "chromium_revision": 749574,
     "chromium_version": "81.0.3994.0"
   }
 }
