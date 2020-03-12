@@ -30,6 +30,7 @@ jobs:
       - name: Commit and push version update
         uses: alexesprit/action-update-file@master
         with:
+          branch: ${{format('{{{0}{1}{2}}}', 'update-chromium', github.run_id, github.run_number)}}
           file-path: ../package.json
           commit-msg: Updated Chromium version
           github-token: ${{ secrets.TEST_GITHUB_TOKEN }}     
