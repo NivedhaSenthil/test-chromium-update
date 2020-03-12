@@ -1,0 +1,25 @@
+name: update-chromium
+on:
+  push:
+    branches: [ master ]
+  # schedule:
+  #   - cron:  '* * * * *'
+
+jobs:
+  update-to-latest-chromium:
+    
+    runs-on: ubuntu-latest
+    
+    steps:
+      - run: |
+          LASTCHANGE_URL="https://www.googleapis.com/download/storage/v1/b/chromium-browser-snapshots/o/Linux_x64%2FLAST_CHANGE?alt=media"
+          export REVISION=$(curl -s -S $LASTCHANGE_URL)
+          echo "latest revision is $REVISION"
+      - uses: peterjgrainger/action-create-branch@v1.0.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.TEST_GITHUB_TOKEN }}
+        with:
+          branch: ${{format('{{{0}-{1}-{2}}}', 'update-chromium', github.run_id, github.run_number)}}
+      - uses: actions/checkout@v2
+        with:
+          ref: ${{format('{{{0}-{1}-{2}}}', 'update-chromium', github.run_id, github.run_number)}}   
