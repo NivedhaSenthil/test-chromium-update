@@ -11,15 +11,25 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-      - run: |
-          LASTCHANGE_URL="https://www.googleapis.com/download/storage/v1/b/chromium-browser-snapshots/o/Linux_x64%2FLAST_CHANGE?alt=media"
-          export REVISION=$(curl -s -S $LASTCHANGE_URL)
-          echo "latest revision is $REVISION"
-      - uses: peterjgrainger/action-create-branch@v1.0.0
+      - name: Create branch
+        uses: peterjgrainger/action-create-branch@v1.0.0
         env:
           GITHUB_TOKEN: ${{ secrets.TEST_GITHUB_TOKEN }}
         with:
           branch: ${{format('{{{0}{1}{2}}}', 'update-chromium', github.run_id, github.run_number)}}
-      - uses: actions/checkout@v2
+      - name: Checkout branch
+        uses: actions/checkout@v2
         with:
-          ref: ${{format('{{{0}{1}{2}}}', 'update-chromium', github.run_id, github.run_number)}}   
+          ref: ${{format('{{{0}{1}{2}}}', 'update-chromium', github.run_id, github.run_number)}}  
+      - name: Get Chromium version and update
+        run: |
+          LASTCHANGE_URL="https://www.googleapis.com/download/storage/v1/b/chromium-browser-snapshots/o/Linux_x64%2FLAST_CHANGE?alt=media"
+          export REVISION=$(curl -s -S $LASTCHANGE_URL)
+          echo "latest revision is $REVISION"
+          npx json -I -f package.json -e 'this.taiko.chromium_revision=$REVISION'
+      - name: Commit and push version update
+        uses: alexesprit/action-update-file@master
+        with:
+          file-path: ../package.json
+          commit-msg: Updated Chromium version
+          github-token: ${{ secrets.TEST_GITHUB_TOKEN }}     

@@ -15,5 +15,9 @@
   "bugs": {
     "url": "https://github.com/NivedhaSenthil/test-chromium-update/issues"
   },
-  "homepage": "https://github.com/NivedhaSenthil/test-chromium-update#readme"
+  "homepage": "https://github.com/NivedhaSenthil/test-chromium-update#readme",
+  "taiko": {
+    "chromium_revision": "724157",
+    "chromium_version": "81.0.3994.0"
+  }
 }
